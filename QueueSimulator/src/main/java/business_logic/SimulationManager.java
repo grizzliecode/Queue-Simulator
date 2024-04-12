@@ -32,11 +32,11 @@ public class SimulationManager implements Runnable{
     }
     @Override
     public void run() {
-        List<Future<Double>> waitings = new ArrayList<>();
+        List<Future<Double>> futureResults = new ArrayList<>();
         for(Server server: this.scheduler.getServers())
         {
             Future<Double> waitingTime = executorService.submit(server);
-            waitings.add(waitingTime);
+            futureResults.add(waitingTime);
         }
         while(simulationTime.get()<maxTime)
         {
@@ -46,28 +46,38 @@ public class SimulationManager implements Runnable{
                 simulationTime.getAndIncrement();
                 scheduler.dispatchTasks(tasks);
             }
-            else
-            {
+
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-            }
+
         }
         endSim.set(true);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Double avg = 0.0;
-        for(Future<Double> wait:waitings)
+        for(Future<Double> w : futureResults)
         {
             try {
-                avg+=wait.get();
+                if(w.isDone())
+                {
+                    avg+=w.get();
+                }
+                else {
+                    System.out.println(w.toString());
+                }
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
         avg = (double) avg/ServersNr;
         System.out.println("Avg waiting time: "+ Double.toString(avg));
-        Thread.currentThread().interrupt();
+        executorService.shutdown();
     }
 
     public void generateTasks()
@@ -77,7 +87,7 @@ public class SimulationManager implements Runnable{
         {
             Random random = new Random();
             int arrival,service;
-            arrival= random.nextInt(minProcTime,maxTime);
+            arrival= random.nextInt(maxProcTime,maxTime);
             service= random.nextInt(minProcTime,maxProcTime);
             Task newTask = new Task(i+1,arrival-service,service);
             this.tasks.add(newTask);

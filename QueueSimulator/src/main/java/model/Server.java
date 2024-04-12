@@ -63,7 +63,8 @@ public class Server implements Callable<Double> {
     {
         this.queue.add(task);
         int newWait = this.getWaitingTime();
-        this.totalWait.getAndAdd(newWait);
+        this.waitingTime.getAndAdd(newWait);
+        this.totalWait.getAndAdd(task.getServiceTime().get());
         this.persons.getAndIncrement();
         newWait+=task.getServiceTime().get();
         this.setWaitingTime(newWait);
