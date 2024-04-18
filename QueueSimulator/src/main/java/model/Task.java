@@ -45,7 +45,7 @@ public class Task  implements Comparable<Task> {
     public int compareTo(@NotNull Task o) {
       if(this.arrivalTime.get()>o.arrivalTime.get())
           return 1;
-      return 0;
+      return -1;
     }
 
     @Override

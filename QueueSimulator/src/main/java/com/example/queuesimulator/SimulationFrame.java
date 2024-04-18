@@ -49,7 +49,6 @@ public class SimulationFrame {
 
     public void setTime(String message) {
         this.myLabel.setText(message);
-        System.out.println(message);
     }
 
     public void init() {

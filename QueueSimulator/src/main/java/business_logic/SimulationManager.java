@@ -6,6 +6,7 @@ import model.SelectionPolicy;
 import model.Server;
 import model.Task;
 
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,14 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulationManager implements Runnable{
     public ExecutorService executorService;
-
+    private StringBuilder log = new StringBuilder();
     private  int totalServiceTime = 0;
     private int peakHour = 0;
     private int peakClientNumber = 0;
     public int ServersNr=3;
     public int TaskNr=60;
     public int maxTime=20;
-    public int minTime = 0;
     private int maxProcTime = 4;
     private int minProcTime=1;
     private int arrTime = 1;
@@ -111,7 +111,15 @@ public class SimulationManager implements Runnable{
             }
         }
         avg = (double) avg/ServersNr;
-        System.out.println("Avg waiting time: "+ Double.toString(avg));
+//        System.out.println("Avg waiting time: "+ Double.toString(avg));
+        log.append("Average waiting time: "+ Double.toString(avg)+"\n");
+        log.append("Average service time: "+Double.toString((double) totalServiceTime/TaskNr)+"\n");
+        log.append("Peak hour: "+Integer.toString(peakHour)+"\n");
+        try {
+            writeFile();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         executorService.shutdown();
     }
 
@@ -144,20 +152,23 @@ public class SimulationManager implements Runnable{
     {
         this.clients.clear();
         int clientNumber = 0;
-        System.out.println("Time "+Integer.toString(simulationTime.get()));
+//        System.out.println("Time "+Integer.toString(simulationTime.get()));
+        log.append("Time "+Integer.toString(simulationTime.get())+"\n");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Waiting: ");
         for(Task waitingTask : this.tasks)
         {
             stringBuilder.append(waitingTask.toString());
         }
-        System.out.println(stringBuilder.toString());
+//        System.out.println(stringBuilder.toString());
+        log.append(stringBuilder.toString()+"\n");
         for(Server server:this.scheduler.getServers())
         {
             ArrayList<String> serverClients = new ArrayList<>();
             if(server.getWaitingTime()==0)
             {
-                System.out.println("Queue "+Integer.toString(this.scheduler.getServers().indexOf(server))+": Closed");
+//                System.out.println("Queue "+Integer.toString(this.scheduler.getServers().indexOf(server))+": Closed");
+                log.append("Queue "+Integer.toString(this.scheduler.getServers().indexOf(server))+": Closed\n");
             }
             else {
                 StringBuilder stringBuffer = new StringBuilder();
@@ -170,7 +181,8 @@ public class SimulationManager implements Runnable{
                     clientNumber++;
                     serverClients.add(task.toString());
                 }
-                System.out.println(stringBuffer.toString());
+//                System.out.println(stringBuffer.toString());
+                log.append(stringBuffer.toString()+"\n");
             }
             this.clients.add(serverClients);
         }
@@ -186,4 +198,10 @@ public class SimulationManager implements Runnable{
 //        Thread t = new Thread(simulation);
 //        t.start();
 //    }
+
+    public void writeFile() throws IOException {
+        Writer writer = new FileWriter("LOG.txt",false);
+        writer.write(log.toString());
+        writer.close();
+    }
 }
