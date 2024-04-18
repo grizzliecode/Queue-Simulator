@@ -9,11 +9,11 @@ public class ShortestQueueStrategy implements Strategy{
     @Override
     public void addTask(List<Server> servers, Task task) {
         int min = Integer.MAX_VALUE;
-        int pos =-1;
+        int pos =0;
         for(Server server : servers)
         {
             int size = server.getSize();
-            if(size>min)
+            if(size<min)
             {
                 min = size;
                 pos=servers.indexOf(server);
