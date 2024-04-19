@@ -20,18 +20,16 @@ public class Server implements Callable<Double> {
         {
             if(SimulationManager.simulationTime.get()==this.serverTime.get())
             {
-                if(queue.peek()!=null){
-                    int newTime = queue.peek().getServiceTime().get()-1;
-                    if(newTime==0)
-                    {
+                serverTime.getAndIncrement();
+                if(queue.peek()!=null) {
+                    int newTime = queue.peek().getServiceTime().get() - 1;
+                    if (newTime == 0) {
                         queue.take();
-                    }
-                    else {
+                    } else {
                         queue.peek().setServiceTime(new AtomicInteger(newTime));
                     }
                     this.waitingTime.getAndDecrement();
                 }
-                serverTime.getAndIncrement();
             }
         }
        if(persons.get()>0) return (double) (totalWait.get()/persons.get());

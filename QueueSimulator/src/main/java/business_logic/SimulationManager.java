@@ -18,13 +18,13 @@ public class SimulationManager implements Runnable{
     private  int totalServiceTime = 0;
     private int peakHour = 0;
     private int peakClientNumber = 0;
-    public int ServersNr=3;
-    public int TaskNr=60;
-    public int maxTime=20;
-    private int maxProcTime = 4;
-    private int minProcTime=1;
-    private int arrTime = 1;
-    private int stopArrTime = 10;
+    public int ServersNr=20;
+    public int TaskNr=1000;
+    public int maxTime=100;
+    private int maxProcTime = 9;
+    private int minProcTime=3;
+    private int arrTime = 10;
+    private int stopArrTime = 100;
     private Scheduler scheduler;
     private List<Task> tasks;
     public SelectionPolicy policy = SelectionPolicy.SHORTEST_TIME;
@@ -194,9 +194,10 @@ public class SimulationManager implements Runnable{
     }
 
 //    public static void main(String[] args) {
-//        SimulationManager simulation = new SimulationManager();
-//        Thread t = new Thread(simulation);
-//        t.start();
+////        SimulationManager simulation = new SimulationManager();
+////        Thread t = new Thread(simulation);
+//        System.out.println("HERE");
+////        t.start();
 //    }
 
     public void writeFile() throws IOException {
