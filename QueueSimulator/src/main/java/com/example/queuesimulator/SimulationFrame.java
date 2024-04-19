@@ -101,6 +101,7 @@ public class SimulationFrame {
                     }
                 }
             }
+            Platform.runLater(()->setTime("Simulation finished"));
         });
         t.setDaemon(true);
         t.start();

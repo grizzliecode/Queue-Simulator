@@ -192,13 +192,7 @@ public class SimulationManager implements Runnable{
             peakHour = simulationTime.get();
         }
     }
-
-//    public static void main(String[] args) {
-////        SimulationManager simulation = new SimulationManager();
-////        Thread t = new Thread(simulation);
-//        System.out.println("HERE");
-////        t.start();
-//    }
+    
 
     public void writeFile() throws IOException {
         Writer writer = new FileWriter("LOG.txt",false);
