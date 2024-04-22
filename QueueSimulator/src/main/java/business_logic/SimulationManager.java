@@ -181,7 +181,6 @@ public class SimulationManager implements Runnable{
                     clientNumber++;
                     serverClients.add(task.toString());
                 }
-//                System.out.println(stringBuffer.toString());
                 log.append(stringBuffer.toString()+"\n");
             }
             this.clients.add(serverClients);
@@ -192,7 +191,7 @@ public class SimulationManager implements Runnable{
             peakHour = simulationTime.get();
         }
     }
-    
+
 
     public void writeFile() throws IOException {
         Writer writer = new FileWriter("LOG.txt",false);
