@@ -1,4 +1,4 @@
-# PT2024_30423_Grigorut_Dominic-Octavian_Assignment_2
+# Queue simulator
 
 
 
